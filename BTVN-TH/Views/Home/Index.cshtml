@@ -1,0 +1,60 @@
+﻿@model IEnumerable<BTVN_TH.Models.Course>
+
+@{
+    ViewBag.Title = "Home Page";
+}
+@*<div class="row">
+    <ul>
+        @foreach (var course in Model)
+            {
+                <li>
+                    @course.DateTime - @course.Lecture.Name
+                </li>
+            }
+    </ul>
+</div>*@
+<div class="course">
+    @foreach(var course in Model)
+            {
+                <li>
+                    <div class="date">
+                        <div class="month">
+                            @course.DateTime.ToString("MM")
+                        </div>
+                        <div class="day">
+                            @course.DateTime.ToString("dd")
+                        </div>
+                    </div>
+                    <div class="details">
+                        <span class="lecture">
+                            @course.Lecture.Name
+                        </span>
+                        <span class="category">
+                            @course.Category.Name
+                        </span>
+                        <button data-course-id ="@course.Id"class="btn btn-default btn-sm js-toggle-attendance">Going</button>
+                    </div>
+                </li>
+            }
+</div>
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $(".js-togger-attendance").click(function (e){
+                var button = $(e.target);
+                $.post("/api/attendances", { courseId: button.attr("data-course-id") })
+                    .done(function () {
+                        button
+                            .removeClass("btn-default")
+                            .addClass("btn-info")
+                            .text("Going");
+
+                    })
+                    .fail(function () {
+                        alert("Something failed!");
+                    });
+            });
+        });
+    </script>
+    }
